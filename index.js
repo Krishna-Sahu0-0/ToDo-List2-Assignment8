@@ -21,14 +21,20 @@ app.get("/", async function (req, res) {
         res.status(500).send("An error occurred while fetching items.");
     }
 });
+
 app.post("/", function (req, res) {
     const itemName = req.body.ele1;
+    // Input validation: prevent blank or whitespace-only submissions
+    if (!itemName || itemName.trim() === "") {
+        return res.redirect("/");
+    }
     const todo4 = new item ({
-        name: itemName
+        name: itemName.trim()
     });
     todo4.save ();
     res.redirect ("/");
 });
+
 app.post("/delete", async function (req, res) {
     const checked = req.body.checkbox1;
     try {
