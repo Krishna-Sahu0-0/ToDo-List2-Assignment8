@@ -5,8 +5,9 @@ app.set ("view engine", "ejs");
 app.use (express.urlencoded ({extended: true}));
 app.use (express.static ("public"));
 
-const mongoose = require ("mongoose");
-mongoose.connect ("mongodb+srv://KrishnaSahu:krsnasahu@cluster0.ax6fuyf.mongodb.net/todo");
+require('dotenv').config();
+const mongoose = require("mongoose");
+mongoose.connect(process.env.MONGO_URI);
 const tryschema = new mongoose.Schema ({
     name: String,
 });
