@@ -90,6 +90,12 @@ input[type="text"]:focus {
     color: grey;
     opacity: 1;
 }
+
+ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
 footer {
     color: white;
     color: rgba(0, 0, 0, 0.5);
