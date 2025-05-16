@@ -1,51 +1,50 @@
-const express = require ("express");
-const bodyParser = require ("body-parser");
-var app = express ();
-app.set ("view engine", "ejs");
-app.use (express.urlencoded ({extended: true}));
-app.use (express.static ("public"));
-
-require('dotenv').config();
+const express = require("express");
 const mongoose = require("mongoose");
+require('dotenv').config();
+
+const app = express();
+app.set("view engine", "ejs");
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static("public"));
+
 mongoose.connect(process.env.MONGO_URI);
-const tryschema = new mongoose.Schema ({
-    name: String,
-});
-const item = mongoose.model ("task", tryschema);
-app.get("/", async function (req, res) {
+
+const Task = mongoose.model("Task", new mongoose.Schema({ name: String }));
+
+app.get("/", async (req, res) => {
     try {
-        const foundItems = await item.find({});
-        res.render("list", { dayej: foundItems });
+        const tasks = await Task.find({});
+        res.render("list", { dayej: tasks });
     } catch (err) {
-        console.log(err);
-        res.status(500).send("An error occurred while fetching items.");
+        res.status(500).send("Error fetching tasks.");
     }
 });
 
-app.post("/", function (req, res) {
-    const itemName = req.body.ele1;
-    // Input validation: prevent blank or whitespace-only submissions
-    if (!itemName || itemName.trim() === "") {
-        return res.redirect("/");
-    }
-    const todo4 = new item ({
-        name: itemName.trim()
-    });
-    todo4.save ();
-    res.redirect ("/");
+app.post("/", async (req, res) => {
+    const name = req.body.ele1?.trim();
+    if (!name) return res.redirect("/");
+    await Task.create({ name });
+    res.redirect("/");
 });
 
-app.post("/delete", async function (req, res) {
-    const checked = req.body.checkbox1;
+app.delete("/delete/:id", async (req, res) => {
     try {
-        await item.findByIdAndDelete(checked);
-        console.log("Deleted successfully");
-        res.redirect("/");
-    } catch (err) {
-        console.log(err);
-        res.status(500).send("An error occurred while deleting the item.");
+        await Task.findByIdAndDelete(req.params.id);
+        res.status(200).send("Deleted");
+    } catch {
+        res.status(500).send("Error deleting task.");
     }
 });
-app.listen ("8000", function () {
-    console.log ("Server is running on port 8000");
+
+app.put("/edit/:id", async (req, res) => {
+    const name = req.body.updatedName?.trim();
+    if (!name) return res.status(400).send("Name required.");
+    try {
+        await Task.findByIdAndUpdate(req.params.id, { name });
+        res.status(200).send("Updated");
+    } catch {
+        res.status(500).send("Error updating task.");
+    }
 });
+
+app.listen(8000, () => console.log("Server running on port 8000"));
