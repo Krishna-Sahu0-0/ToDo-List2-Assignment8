@@ -12,8 +12,8 @@
         <ul>
             <% dayej.forEach(task => { %>
                 <li>
+                    <input type="checkbox" class="delete-checkbox" data-id="<%= task._id %>">
                     <%= task.name %>
-                    <button class="delete-btn" data-id="<%= task._id %>">Delete</button>
                 </li>
             <% }) %>
         </ul>
