@@ -10,11 +10,21 @@
         <h1>Todo list</h1>
     </div>
     <div class="box">
+        <form method="get" action="/">
+            <label for="filter">Filter by Priority:</label>
+            <select name="priority" id="filter" onchange="this.form.submit()">
+                <option value="">All</option>
+                <option value="High" <%= (filter === 'High') ? 'selected' : '' %>>High</option>
+                <option value="Medium" <%= (filter === 'Medium') ? 'selected' : '' %>>Medium</option>
+                <option value="Low" <%= (filter === 'Low') ? 'selected' : '' %>>Low</option>
+            </select>
+        </form>
         <ul>
             <% dayej.forEach(task => { %>
                 <li class="task-item">
                     <input type="checkbox" class="delete-checkbox" data-id="<%= task._id %>">
                     <span class="task-name" data-id="<%= task._id %>"><%= task.name %></span>
+                    <span class="priority <%= task.priority.toLowerCase() %>"><%= task.priority %></span>
                     <span class="icon-group">
                         <button class="edit-btn" data-id="<%= task._id %>">
                             <i class="fas fa-pencil-alt"></i>
@@ -28,6 +38,11 @@
         </ul>
         <form class="item" action="/" method="post">
             <input type="text" name="ele1" placeholder="Enter the task">
+            <select name="priority">
+                <option value="Low">Low</option>
+                <option value="Medium" selected>Medium</option>
+                <option value="High">High</option>
+            </select>
             <button type="submit">+</button>
         </form>
     </div>

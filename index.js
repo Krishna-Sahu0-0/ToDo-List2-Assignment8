@@ -10,12 +10,17 @@ app.use(express.json());
 
 mongoose.connect(process.env.MONGO_URI);
 
-const Task = mongoose.model("Task", new mongoose.Schema({ name: String }));
+const Task = mongoose.model("Task", new mongoose.Schema({
+    name: String,
+    priority: { type: String, enum: ["Low", "Medium", "High"], default: "Medium" }
+}));
 
 app.get("/", async (req, res) => {
     try {
-        const tasks = await Task.find({});
-        res.render("list", { dayej: tasks });
+        const filter = req.query.priority;
+        const query = filter ? { priority: filter } : {};
+        const tasks = await Task.find(query);
+        res.render("list", { dayej: tasks, filter });
     } catch (err) {
         res.status(500).send("Error fetching tasks.");
     }
@@ -23,8 +28,9 @@ app.get("/", async (req, res) => {
 
 app.post("/", async (req, res) => {
     const name = req.body.ele1?.trim();
+    const priority = req.body.priority || "Medium";
     if (!name) return res.redirect("/");
-    await Task.create({ name });
+    await Task.create({ name, priority });
     res.redirect("/");
 });
 
@@ -39,9 +45,10 @@ app.delete("/delete/:id", async (req, res) => {
 
 app.put("/edit/:id", async (req, res) => {
     const name = req.body.updatedName?.trim();
+    const priority = req.body.updatedPriority;
     if (!name) return res.status(400).send("Name required.");
     try {
-        await Task.findByIdAndUpdate(req.params.id, { name });
+        await Task.findByIdAndUpdate(req.params.id, { name, priority });
         res.status(200).send("Updated");
     } catch {
         res.status(500).send("Error updating task.");
