@@ -1,7 +1,8 @@
 document.querySelectorAll('.edit-btn').forEach(btn => {
     btn.addEventListener('click', function () {
         const taskId = this.dataset.id;
-        const taskNameSpan = document.querySelector(`.task-name[data-id="${taskId}"]`);
+        const taskItem = this.closest('.task-item');
+        const taskNameSpan = taskItem.querySelector('.task-name');
         const oldName = taskNameSpan.textContent;
         // Create input box
         const input = document.createElement('input');
@@ -11,7 +12,6 @@ document.querySelectorAll('.edit-btn').forEach(btn => {
         taskNameSpan.replaceWith(input);
         input.focus();
 
-        // Save on blur or Enter
         function saveEdit() {
             const newName = input.value.trim();
             if (newName && newName !== oldName) {
