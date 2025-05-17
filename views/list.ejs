@@ -14,7 +14,7 @@
             <% dayej.forEach(task => { %>
                 <li class="task-item">
                     <input type="checkbox" class="delete-checkbox" data-id="<%= task._id %>">
-                    <span class="task-name"><%= task.name %></span>
+                    <span class="task-name" data-id="<%= task._id %>"><%= task.name %></span>
                     <span class="icon-group">
                         <button class="edit-btn" data-id="<%= task._id %>">
                             <i class="fas fa-pencil-alt"></i>
@@ -31,7 +31,7 @@
             <button type="submit">+</button>
         </form>
     </div>
-    <script src="/delete.js"></script>
     <script src="/edit.js"></script>
+    <script src="/delete.js"></script>
 </body>
 </html>

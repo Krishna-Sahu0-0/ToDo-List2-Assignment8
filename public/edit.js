@@ -1,17 +1,39 @@
 document.querySelectorAll('.edit-btn').forEach(btn => {
     btn.addEventListener('click', function () {
         const taskId = this.dataset.id;
-        const newName = prompt("Edit your task:");
-        if (newName && newName.trim() !== "") {
-            fetch(`/edit/${taskId}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ updatedName: newName.trim() })
-            })
-            .then(res => {
-                if (res.ok) location.reload();
-                else alert('Edit failed');
-            });
+        const taskNameSpan = document.querySelector(`.task-name[data-id="${taskId}"]`);
+        const oldName = taskNameSpan.textContent;
+        // Create input box
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.value = oldName;
+        input.className = 'edit-input';
+        taskNameSpan.replaceWith(input);
+        input.focus();
+
+        // Save on blur or Enter
+        function saveEdit() {
+            const newName = input.value.trim();
+            if (newName && newName !== oldName) {
+                fetch(`/edit/${taskId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ updatedName: newName })
+                })
+                .then(res => {
+                    if (res.ok) location.reload();
+                    else alert('Edit failed');
+                });
+            } else {
+                input.replaceWith(taskNameSpan);
+            }
         }
+
+        input.addEventListener('blur', saveEdit);
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                input.blur();
+            }
+        });
     });
 });
