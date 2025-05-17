@@ -104,6 +104,7 @@ footer {
 
 .task-name {
     margin-right: 10px;
+    transition: color 0.2s, text-decoration 0.2s;
 }
 
 .edit-btn, .delete-btn {
@@ -133,4 +134,23 @@ footer {
 .delete-btn:hover i {
     color: #c0392b;
     transform: scale(1.2);
+}
+
+.task-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-right: 10px;
+}
+
+/* Cross the string when checkbox is checked */
+.delete-checkbox:checked + .task-name {
+    text-decoration: line-through;
+    text-decoration-color: #A683E3;
+    color: #aaa;
+}
+
+.icon-group {
+    display: flex;
+    gap: 4px;
 }
