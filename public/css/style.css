@@ -221,6 +221,21 @@ form.item select {
     font-size: 1em;
 }
 
+.tick-btn {
+    background: none;
+    border: none;
+    color: #27ae60;
+    font-size: 1.2em;
+    cursor: pointer;
+    margin-left: 6px;
+    vertical-align: middle;
+    transition: color 0.2s, transform 0.2s;
+}
+.tick-btn:hover {
+    color: #219150;
+    transform: scale(1.2);
+}
+
 @media (max-width: 600px) {
     .box {
         max-width: 98vw;
